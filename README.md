@@ -16,6 +16,8 @@
 
 FastAPI es un framework para crear APIs con Python. Es de los más rápidos que existen, compite contra Node.js y Go. Esta tecnología fue creada por [Sebastián Ramírez](https://twitter.com/tiangolo).
 
+[Página oficial de FastAPI](https://fastapi.tiangolo.com/)
+
 Fast API es usado por Uber, Windows, Netflix. y Office.
 
 ### Ubicación de FastAPI en el ecosistema de Python
