@@ -53,3 +53,38 @@ Pero necesitamos usar Swagger o ReDoc.
 Si ingresas a 'https://localhost:8000/docs' verás que ya tienes la documentación creada con Swagger.
 
 Si ingresas a 'https://localhost:8000/redoc' verás que ya tienes la documentación creada con ReDoc.
+
+## Desarmando el framework
+
+### Path Operations
+
+Path = Route = Endpoint
+
+Operation = Método HTTP
+
+1. GET ->  solicita una representación de un recurso específico. Las peticiones que usan el método GET sólo deben recuperar datos.
+2. HEAD -> pide una respuesta idéntica a la de una petición GET, pero sin el cuerpo de la respuesta.
+3. POST -> se utiliza para enviar una entidad a un recurso en específico, causando a menudo un cambio en el estado o efectos secundarios en el servidor.
+4. PUT -> reemplaza todas las representaciones actuales del recurso de destino con la carga útil de la petición.
+5. DELETE -> borra un recurso en específico.
+6. CONNECT -> establece un túnel hacia el servidor identificado por el recurso.
+7. OPTIONS -> es utilizado para describir las opciones de comunicación para el recurso de destino.
+8. TRACE -> realiza una prueba de bucle de retorno de mensaje a lo largo de la ruta al recurso de destino.
+9. PATCH -> es utilizado para aplicar modificaciones parciales a un recurso.
+
+[Documentación de Developer Mozilla](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
+
+### Path Parameters
+
+Podemos crear variables dentro de los endpoints, se les llama **Path Parameters**. Si yo los defino, entonces es obligatorio usarlos. Por ejemplo: `/tweets/{tweet_id}`.
+
+### Query Parameters
+
+User -> método PUT => `/users/{user_id}/details?age=20&name=Juan`
+
+Usando los '?' usamos los query parameters y con el '&' usamos varios al mismo tiempo.
+
+### Request Body y Response Body
+
+- Request body en FastAPI es el body de una petición HTTP.
+- Response body en FastAPI es el body de una respuesta HTTP.
