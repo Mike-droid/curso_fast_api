@@ -100,3 +100,33 @@ En FastAPI, el `...` quiere decir que es un parámetro obligatorio.
 ## Validaciones
 
 ### Validaciones: Query Parameters
+
+En este ejemplo estamos haciendo que un query parameter sea obligatorio, lo cual no es ni muy común ni buena práctica, pero es para fines didácticos.
+
+```python
+@app.get("/person/detail")
+def show_person(
+    name: Optional[str] = Query(None, min_length=1, max_length=50),
+    age: int = Query(...)
+):
+    return {"name": name, "age": age}
+
+```
+
+Con esto, si accedemos  `http://localhost:8000/person/detail?name=Miguel&age=23` obtenemos un JSON:
+
+```json
+{
+  "name": "Miguel",
+  "age": 23
+}
+```
+
+### Validaciones: explorando más parameters
+
+- ge -> greater or equal than `>=`
+- le -> less or equal than `<=`
+- gt -> greater than `>`
+- lt -> less than `<`
+
+### Validaciones: Path Parameters
