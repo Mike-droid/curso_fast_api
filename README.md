@@ -149,3 +149,57 @@ def show_person(
 ```
 
 ### Validaciones: Request Body
+
+Creamos una nueva clase:
+
+```python
+class Location(BaseModel):
+    city: str
+    state: str
+    country: str
+
+```
+
+Creamos un nuevo endpoint:
+
+```python
+# Validations: Request Body
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID",
+        description="This is the person ID.",
+        gt=0
+    ),
+    person: Person = Body(...),
+    location: Location = Body(...),
+):
+    return {
+        "person_id": person_id,
+        "person:": person,
+        "location": location,
+    }
+
+```
+
+Al enviar los valores, obtenemos por ejemplo este JSON:
+
+```json
+{
+  "person:": {
+    "first_name": "Miguel",
+    "last_name": "Reyes",
+    "age": 23,
+    "hair_color": "brown",
+    "is_married": false
+  },
+  "person_id": 1,
+  "location": {
+    "city": "Piedras Negras",
+    "state": "Coahuila",
+    "country": "México"
+  }
+}
+```

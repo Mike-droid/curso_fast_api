@@ -13,6 +13,13 @@ app = FastAPI() # Todo nuestro programa se carga en la variable
 
 
 # Models
+
+class Location(BaseModel):
+    city: str
+    state: str
+    country: str
+
+
 class Person(BaseModel):
     first_name: str
     last_name: str
@@ -65,3 +72,23 @@ def show_person(
         )
 ):
     return {"person_id": person_id}
+
+
+# Validations: Request Body
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID",
+        description="This is the person ID.",
+        gt=0
+    ),
+    person: Person = Body(...),
+    location: Location = Body(...),
+):
+    return {
+        "person_id": person_id,
+        "person:": person,
+        "location": location,
+    }
