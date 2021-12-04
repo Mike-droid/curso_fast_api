@@ -5,6 +5,9 @@ from enum import Enum #Podemos crear enumaraciones de Strings
 #Pydantic
 from pydantic import BaseModel
 from pydantic import Field # Es lo mismo que Body, Query, Path
+from pydantic import EmailStr
+from pydantic import PaymentCardNumber
+from pydantic.color import Color
 
 #FastAPI
 from fastapi import FastAPI
@@ -26,9 +29,21 @@ class HairColor(Enum):
 
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
 
 
 class Person(BaseModel):
@@ -49,6 +64,18 @@ class Person(BaseModel):
     )
     hair_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
+    email: EmailStr = Field(
+        ...,
+        title="Email",
+        description="Email of the person. Must be valid.",
+    )
+    payment_card_number: PaymentCardNumber = Field(
+        ...,
+        title="Payment card number",
+        description="Payment card number of the person to pay our services. Must be valid.",
+    )
+    favorite_color: Optional[Color] = Field(default=None)
+
 
 
 @app.get("/") #path operation decorator
@@ -71,8 +98,8 @@ def show_person(
         None,
         min_length=1,
         max_length=50,
-        title="Person name",
-        description="This is the person name. It's between 1 and 50 characters",
+        title="Person name.",
+        description="This is the person name. It's between 1 and 50 characters.",
         ),
     age: int = Query(
         ...,
@@ -90,8 +117,8 @@ def show_person(
     person_id: int = Path(
         ...,
         gt=0,
-        title="Person ID",
-        description="This is the person ID. It's required and must be greater than 0",
+        title="Person ID.",
+        description="This is the person ID. It's required and must be greater than 0.",
         )
 ):
     return {"person_id": person_id}
@@ -103,7 +130,7 @@ def show_person(
 def update_person(
     person_id: int = Path(
         ...,
-        title="Person ID",
+        title="Person ID.",
         description="This is the person ID.",
         gt=0
     ),

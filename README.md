@@ -253,3 +253,176 @@ class Person(BaseModel):
 ```
 
 Ahora tenemos validaciones en los modelos y solo tenemos ciertos valores permitidos para los campos.
+
+### Tipos de datos especiales
+
+- Clásicos
+  - String
+  - Int
+  - float
+  - double
+  - boolean
+- Exóticos
+  - Enum -> Para datos específicos
+  - HttpUrl -> Para urls `https://www.google.com`
+  - FilePath -> Para validar rutas de archivos `c:/windows/system32/algo.dll`
+  - DirectoryPath -> Para validar ruta de directorios `/mnt/c/somefolder`
+  - EmailString -> Para validar emails `hola@ejemplo.com`
+  - PaymentCardNumber -> Para validar tarjetas de crédito/débito `454545XXXXXXXXXX`
+  - IPvAnyAddress -> Para validar direcciones IP `127.0.0.1`
+  - NegativeFloat -> Para validar números decimales negativos
+  - PositiveFloat
+  - NegativeInt
+  - PositiveInt
+
+[Documentación de Pydantic para tipos de datos](https://pydantic-docs.helpmanual.io/usage/types/#pydantic-types)
+
+Actualiación de código:
+
+```python
+#Python
+from typing import Optional
+from enum import Enum #Podemos crear enumaraciones de Strings
+
+#Pydantic
+from pydantic import BaseModel
+from pydantic import Field # Es lo mismo que Body, Query, Path
+from pydantic import EmailStr
+from pydantic import PaymentCardNumber
+from pydantic.color import Color
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Body, Query, Path
+
+
+app = FastAPI() # Todo nuestro programa se carga en la variable
+
+
+# Models
+
+class HairColor(Enum):
+    RED = "red"
+    BLONDE = "blonde"
+    BROWN = "brown"
+    BLACK = "black"
+    WHITE = "white"
+    GRAY = "gray"
+
+
+class Location(BaseModel):
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+
+
+class Person(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    last_name: str= Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115
+    )
+    hair_color: Optional[HairColor] = Field(default=None)
+    is_married: Optional[bool] = Field(default=None)
+    email: EmailStr = Field(
+        ...,
+        title="Email",
+        description="Email of the person. Must be valid.",
+    )
+    payment_card_number: PaymentCardNumber = Field(
+        ...,
+        title="Payment card number",
+        description="Payment card number of the person to pay our services. Must be valid.",
+    )
+    favorite_color: Optional[Color] = Field(default=None)
+
+
+
+@app.get("/") #path operation decorator
+def home(): #path operation function
+    return {"message": "Hello World, I'm using Python and FastAPI 🐍"}
+
+
+# Request and Response Body
+
+@app.post("/person/new")
+def create_person(person: Person = Body(...)): # Los '...' indican que es obligatorio
+    return person
+
+
+# Validaciones: Query Parameters
+
+@app.get("/person/detail")
+def show_person(
+    name: Optional[str] = Query(
+        None,
+        min_length=1,
+        max_length=50,
+        title="Person name.",
+        description="This is the person name. It's between 1 and 50 characters.",
+        ),
+    age: int = Query(
+        ...,
+        title="Person age",
+        description="This is the person age. It's required",
+        )
+):
+    return {"name": name, "age": age}
+
+
+# Validaciones: Path Parameters
+
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        title="Person ID.",
+        description="This is the person ID. It's required and must be greater than 0.",
+        )
+):
+    return {"person_id": person_id}
+
+
+# Validations: Request Body
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID.",
+        description="This is the person ID.",
+        gt=0
+    ),
+    person: Person = Body(...),
+    location: Location = Body(...),
+):
+    return {
+        "person_id": person_id,
+        "person:": person,
+        "location": location,
+    }
+
+```
