@@ -203,3 +203,53 @@ Al enviar los valores, obtenemos por ejemplo este JSON:
   }
 }
 ```
+
+### Validaciones: Models
+
+Importamos más paquetes y actualizamos el código:
+
+```python
+#Python
+from typing import Optional
+from enum import Enum #Podemos crear enumaraciones de Strings
+
+#Pydantic
+from pydantic import BaseModel
+from pydantic import Field # Es lo mismo que Body, Query, Path
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Body, Query, Path
+
+
+class HairColor(Enum):
+    RED = "red"
+    BLONDE = "blonde"
+    BROWN = "brown"
+    BLACK = "black"
+    WHITE = "white"
+    GRAY = "gray"
+
+
+class Person(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    last_name: str= Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115
+    )
+    hair_color: Optional[HairColor] = Field(default=None)
+    is_married: Optional[bool] = Field(default=None)
+
+```
+
+Ahora tenemos validaciones en los modelos y solo tenemos ciertos valores permitidos para los campos.
