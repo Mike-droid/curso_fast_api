@@ -96,3 +96,7 @@ Esto va de la mano con las Bases de Datos. Piensa en los modelos como entidades.
 Necesitamos usar a Pydantic y a Base Model para crear los modelos.
 
 En FastAPI, el `...` quiere decir que es un parámetro obligatorio.
+
+## Validaciones
+
+### Validaciones: Query Parameters
