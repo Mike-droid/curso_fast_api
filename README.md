@@ -132,3 +132,20 @@ Con esto, si accedemos  `http://localhost:8000/person/detail?name=Miguel&age=23`
 - lt -> less than `<`
 
 ### Validaciones: Path Parameters
+
+```python
+
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        title="Person ID",
+        description="This is the person ID. It's required and must be greater than 0",
+        )
+):
+    return {"person_id": person_id}
+
+```
+
+### Validaciones: Request Body
