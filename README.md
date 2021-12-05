@@ -526,3 +526,5 @@ Y tendremos un JSON con valores por defecto:
   }
 }
 ```
+
+### Creando ejemplos de Path y Query parameters automáticos
