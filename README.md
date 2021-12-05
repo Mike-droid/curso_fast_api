@@ -426,3 +426,103 @@ def update_person(
     }
 
 ```
+
+## Ejemplos
+
+### Creando ejemplos de Request Body automáticos
+
+Podemos poner valores por defecto los body parameters. Debemos crear una clase dentro de nuestra clase.
+
+```python
+class Location(BaseModel):
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=75
+    )
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "city": "Los Angeles",
+                "state": "California",
+                "country": "USA"
+            }
+        }
+
+
+class Person(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    last_name: str= Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115
+    )
+    hair_color: Optional[HairColor] = Field(default=None, example="brown")
+    is_married: Optional[bool] = Field(default=None, example=False)
+    email: EmailStr = Field(
+        ...,
+        title="Email",
+        description="Email of the person. Must be valid."
+    )
+    payment_card_number: PaymentCardNumber = Field(
+        ...,
+        title="Payment card number",
+        description="Payment card number of the person to pay our services. Must be valid."
+    )
+    favorite_color: Optional[Color] = Field(default=None)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "Miguel",
+                "last_name": "Reyes",
+                "age": 23,
+                "hair_color": "brown",
+                "is_married": False,
+                "email": "miguel@gmail.com",
+                "payment_card_number": "5428614385158093"
+            }
+        }
+
+```
+
+Y tendremos un JSON con valores por defecto:
+
+```json
+{
+  "person": {
+    "first_name": "Miguel",
+    "last_name": "Reyes",
+    "age": 23,
+    "hair_color": "brown",
+    "is_married": false,
+    "email": "miguel@gmail.com",
+    "payment_card_number": "5428614385158093"
+  },
+  "location": {
+    "city": "Los Angeles",
+    "state": "California",
+    "country": "USA"
+  }
+}
+```

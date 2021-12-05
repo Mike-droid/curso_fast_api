@@ -45,6 +45,15 @@ class Location(BaseModel):
         max_length=75
     )
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "city": "Los Angeles",
+                "state": "California",
+                "country": "USA"
+            }
+        }
+
 
 class Person(BaseModel):
     first_name: str = Field(
@@ -62,20 +71,32 @@ class Person(BaseModel):
         gt=0,
         le=115
     )
-    hair_color: Optional[HairColor] = Field(default=None)
-    is_married: Optional[bool] = Field(default=None)
+    hair_color: Optional[HairColor] = Field(default=None, example="brown")
+    is_married: Optional[bool] = Field(default=None, example=False)
     email: EmailStr = Field(
         ...,
         title="Email",
-        description="Email of the person. Must be valid.",
+        description="Email of the person. Must be valid."
     )
     payment_card_number: PaymentCardNumber = Field(
         ...,
         title="Payment card number",
-        description="Payment card number of the person to pay our services. Must be valid.",
+        description="Payment card number of the person to pay our services. Must be valid."
     )
     favorite_color: Optional[Color] = Field(default=None)
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "Miguel",
+                "last_name": "Reyes",
+                "age": 23,
+                "hair_color": "brown",
+                "is_married": False,
+                "email": "miguel@gmail.com",
+                "payment_card_number": "5428614385158093"
+            }
+        }
 
 
 @app.get("/") #path operation decorator
